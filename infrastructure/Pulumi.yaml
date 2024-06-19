@@ -1,0 +1,7 @@
+name: contextGPT
+runtime: nodejs
+description: GPT with context RAG pipeline
+config:
+  pulumi:tags:
+    value:
+      pulumi:template: aws-typescript
