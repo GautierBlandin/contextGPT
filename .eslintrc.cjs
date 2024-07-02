@@ -14,7 +14,12 @@ module.exports = {
     commonjs: true,
     es6: true,
   },
-  ignorePatterns: ["!**/.server", "!**/.client"],
+  ignorePatterns: [
+    "*",
+    "!server.ts",
+    "!app/**",
+    "!infrastructure/**",
+  ],
 
   // Base config
   extends: [
