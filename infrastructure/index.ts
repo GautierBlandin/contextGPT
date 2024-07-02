@@ -16,7 +16,6 @@ const config = {
   certificateArn: stackConfig.require('certificateArn'),
 };
 
-
 const bucket = new aws.s3.Bucket('bucket', {
   corsRules: [
     {
@@ -151,7 +150,10 @@ function getDomainAndSubdomain(domain: string): { subdomain: string; parentDomai
 }
 
 // Creates a new Route53 DNS record pointing the domain to the CloudFront distribution.
-function createAliasRecord(targetDomain: string, distribution: aws.cloudfront.Distribution): aws.route53.Record {
+function createAliasRecord(
+  targetDomain: string,
+  distribution: aws.cloudfront.Distribution,
+): aws.route53.Record {
   const domainParts = getDomainAndSubdomain(targetDomain);
   const hostedZoneId = aws.route53
     .getZone({ name: domainParts.parentDomain }, { async: true })
@@ -170,7 +172,10 @@ function createAliasRecord(targetDomain: string, distribution: aws.cloudfront.Di
   });
 }
 
-function createWWWAliasRecord(targetDomain: string, distribution: aws.cloudfront.Distribution): aws.route53.Record {
+function createWWWAliasRecord(
+  targetDomain: string,
+  distribution: aws.cloudfront.Distribution,
+): aws.route53.Record {
   const domainParts = getDomainAndSubdomain(targetDomain);
   const hostedZoneId = aws.route53
     .getZone({ name: domainParts.parentDomain }, { async: true })

@@ -1,0 +1,6 @@
+{
+  "printWidth": 120,
+  "endingPosition": "absolute",
+  "singleQuote": true,
+  "plugins": ["prettier-plugin-tailwindcss", "prettier-plugin-classnames"]
+}

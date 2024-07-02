@@ -9,7 +9,10 @@ const requestHandler = createRequestHandler({
 export const handler = (...args: Parameters<APIGatewayProxyHandlerV2>) => {
   const [apiGatewayEvent, ...rest] = args;
   apiGatewayEvent.rawPath = apiGatewayEvent.rawPath.replace(/^\/dev/, '');
-  apiGatewayEvent.requestContext.http.path = apiGatewayEvent.requestContext.http.path.replace(/^\/dev/, '');
+  apiGatewayEvent.requestContext.http.path = apiGatewayEvent.requestContext.http.path.replace(
+    /^\/dev/,
+    '',
+  );
 
   return requestHandler(apiGatewayEvent, ...rest);
 };

@@ -4,11 +4,13 @@ import { defineStore } from '@contextgpt/utils';
 interface ChatStore {
   messages: Message[];
   isStreaming: boolean;
-  postUserMessage: (content: string) => void;
-  startAssistantResponse: () => void;
-  appendToAssistantResponse: (content: string) => void;
-  finishAssistantResponse: () => void;
-  getChat: () => Message[];
+  actions: {
+    postUserMessage: (content: string) => void;
+    startAssistantResponse: () => void;
+    appendToAssistantResponse: (content: string) => void;
+    finishAssistantResponse: () => void;
+    getChat: () => Message[];
+  };
 }
 
 interface Message {
@@ -20,32 +22,42 @@ interface Message {
 const createChatStore: StateCreator<ChatStore> = (set, get) => ({
   messages: [],
   isStreaming: false,
+  actions: {
+    postUserMessage: (content) =>
+      set((state) => ({
+        messages: [...state.messages, { id: Date.now().toString(), role: 'user', content }],
+      })),
 
-  postUserMessage: (content) => set((state) => ({
-    messages: [...state.messages, { id: Date.now().toString(), role: 'user', content }]
-  })),
+    startAssistantResponse: () =>
+      set((state) => ({
+        messages: [...state.messages, { id: Date.now().toString(), role: 'assistant', content: '' }],
+        isStreaming: true,
+      })),
 
-  startAssistantResponse: () => set((state) => ({
-    messages: [...state.messages, { id: Date.now().toString(), role: 'assistant', content: '' }],
-    isStreaming: true
-  })),
+    appendToAssistantResponse: (content) =>
+      set((state) => {
+        const lastMessage = state.messages[state.messages.length - 1];
+        if (lastMessage.role !== 'assistant') return state;
 
-  appendToAssistantResponse: (content) => set((state) => {
-    const lastMessage = state.messages[state.messages.length - 1];
-    if (lastMessage.role !== 'assistant') return state;
+        const updatedMessages = [...state.messages];
+        updatedMessages[updatedMessages.length - 1] = {
+          ...lastMessage,
+          content: lastMessage.content + content,
+        };
 
-    const updatedMessages = [...state.messages];
-    updatedMessages[updatedMessages.length - 1] = {
-      ...lastMessage,
-      content: lastMessage.content + content
-    };
+        return { messages: updatedMessages };
+      }),
 
-    return { messages: updatedMessages };
-  }),
+    finishAssistantResponse: () => set({ isStreaming: false }),
 
-  finishAssistantResponse: () => set({ isStreaming: false }),
-
-  getChat: () => get().messages
+    getChat: () => get().messages,
+  },
 });
 
 export const [ChatStoreProvider, useChatStore] = defineStore(createChatStore);
+
+export const chatSelector = {
+  actions: (state: ChatStore) => state.actions,
+  messages: (state: ChatStore) => state.messages,
+  isStreaming: (state: ChatStore) => state.isStreaming,
+};
