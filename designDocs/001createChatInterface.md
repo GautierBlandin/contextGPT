@@ -13,11 +13,12 @@ Using an LLM API. The goal of this ticket is purely to make a well-tested presen
 # Approach
 
 Dumb components:
-
 - User input
 - User bubble
 - Assistant Bubble
-  Smart components:
+- Chat Body (uses UserBubble and AssistantBubble)
+
+Smart components:
 - Chat
 - chat.store.tsx (zustand)
 

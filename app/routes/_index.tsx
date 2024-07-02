@@ -1,9 +1,17 @@
 import type { MetaFunction } from '@remix-run/node';
+import { Chat } from '~/libs/chat-feature/components/Chat';
 
 export const meta: MetaFunction = () => {
-  return [{ title: 'New Remix App' }, { name: 'description', content: 'Welcome to Remix!' }];
+  return [
+    { title: 'Chat Application' },
+    { name: 'description', content: 'A simple chat interface' }
+  ];
 };
 
 export default function Index() {
-  return <h1 className="text-3xl font-bold underline">Hello world!</h1>;
+  return (
+    <div className="h-screen">
+      <Chat />
+    </div>
+  );
 }
